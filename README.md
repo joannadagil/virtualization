@@ -1,4 +1,4 @@
-# docker_project
+# Virtualization and Containerization
 
 Minimalistic project for the Virtualisation and Containerization course - multi-container application with Docker Compose.
 
