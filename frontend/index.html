@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Docker project: MySQL + API + Front</title>
+    <style>
+      body { font-family: sans-serif; max-width: 700px; margin: 30px auto; }
+      input { width: 70%; padding: 8px; }
+      button { padding: 8px 12px; }
+      li { margin: 6px 0; }
+    </style>
+  </head>
+  <body>
+    <h1>Messages</h1>
+
+    <div>
+      <input id="msg" placeholder="Type message..." />
+      <button id="send">Send</button>
+    </div>
+
+    <ul id="list"></ul>
+
+    <script>
+      async function load() {
+        const res = await fetch("/api/messages");
+        const data = await res.json();
+        const ul = document.getElementById("list");
+        ul.innerHTML = "";
+        for (const row of data) {
+          const li = document.createElement("li");
+          li.textContent = `${row.id}: ${row.content} (${row.created_at})`;
+          ul.appendChild(li);
+        }
+      }
+
+      document.getElementById("send").onclick = async () => {
+        const input = document.getElementById("msg");
+        const content = input.value.trim();
+        if (!content) return;
+        await fetch("/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content }),
+        });
+        input.value = "";
+        load();
+      };
+
+      load();
+    </script>
+  </body>
+</html>
